@@ -45,7 +45,7 @@ yarn-error.log
 tools/k6/.env
 
 *.exe
-*.tar.gz
+*.gz
 *.zip
 *.tgz
 *.tar

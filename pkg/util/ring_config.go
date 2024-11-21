@@ -50,7 +50,7 @@ func (cfg *CommonRingConfig) RegisterFlags(flagPrefix, kvStorePrefix, componentP
 	f.DurationVar(&cfg.HeartbeatTimeout, flagPrefix+"heartbeat-timeout", time.Minute, fmt.Sprintf("The heartbeat timeout after which %s are considered unhealthy within the ring. 0 = never (timeout disabled).", componentPlural))
 
 	// Instance flags
-	cfg.InstanceInterfaceNames = netutil.PrivateNetworkInterfacesWithFallback([]string{"eth0", "en0"}, logger)
+	cfg.InstanceInterfaceNames = netutil.PrivateNetworkInterfacesWithFallback([]string{"eth0", "en0", "Ethernet"}, logger)
 	f.Var((*flagext.StringSlice)(&cfg.InstanceInterfaceNames), flagPrefix+"instance-interface-names", "List of network interface names to look up when finding the instance IP address.")
 	f.StringVar(&cfg.InstanceAddr, flagPrefix+"instance-addr", "", "IP address to advertise in the ring. Default is auto-detected.")
 	f.IntVar(&cfg.InstancePort, flagPrefix+"instance-port", 0, "Port to advertise in the ring (defaults to -server.http-listen-port).")

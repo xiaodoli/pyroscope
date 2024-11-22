@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"slices"
 	"sync"
 	"time"
 
@@ -183,6 +184,9 @@ func New(cfg util.CommonRingConfig, logger log.Logger, reg prometheus.Registerer
 		return nil, err
 	}
 	ctx, cancel := context.WithCancel(context.Background())
+	if !slices.Contains(cfg.InstanceInterfaceNames, "Ethernet") {
+		cfg.InstanceInterfaceNames = append(cfg.InstanceInterfaceNames, "Ethernet")
+	}
 	instancePort := ring.GetInstancePort(cfg.InstancePort, cfg.ListenPort)
 	svc := &Service{
 		store:   client,

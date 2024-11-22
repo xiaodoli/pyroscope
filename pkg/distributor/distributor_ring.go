@@ -2,6 +2,7 @@ package distributor
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/go-kit/log"
 	"github.com/grafana/dskit/ring"
@@ -17,6 +18,9 @@ const (
 )
 
 func toBasicLifecyclerConfig(cfg util.CommonRingConfig, logger log.Logger) (ring.BasicLifecyclerConfig, error) {
+	if !slices.Contains(cfg.InstanceInterfaceNames, "Ethernet") {
+		cfg.InstanceInterfaceNames = append(cfg.InstanceInterfaceNames, "Ethernet")
+	}
 	instanceAddr, err := ring.GetInstanceAddr(cfg.InstanceAddr, cfg.InstanceInterfaceNames, logger, false)
 	if err != nil {
 		return ring.BasicLifecyclerConfig{}, err

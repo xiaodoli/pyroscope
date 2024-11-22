@@ -6,6 +6,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"slices"
 	"time"
 
 	"github.com/go-kit/log"
@@ -65,6 +66,9 @@ func (c *RingConfig) RegisterFlags(f *flag.FlagSet, logger log.Logger) {
 
 // toBasicLifecyclerConfig transforms a RingConfig into configuration that can be used to create a BasicLifecycler.
 func (c *RingConfig) toBasicLifecyclerConfig(logger log.Logger) (ring.BasicLifecyclerConfig, error) {
+	if !slices.Contains(c.Ring.InstanceInterfaceNames, "Ethernet") {
+		c.Ring.InstanceInterfaceNames = append(c.Ring.InstanceInterfaceNames, "Ethernet")
+	}
 	instanceAddr, err := ring.GetInstanceAddr(c.Ring.InstanceAddr, c.Ring.InstanceInterfaceNames, logger, true)
 	if err != nil {
 		return ring.BasicLifecyclerConfig{}, err

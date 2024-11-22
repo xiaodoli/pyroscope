@@ -8,6 +8,7 @@ package compactor
 import (
 	"flag"
 	"fmt"
+	"slices"
 	"time"
 
 	"github.com/go-kit/log"
@@ -55,6 +56,9 @@ func (cfg *RingConfig) RegisterFlags(f *flag.FlagSet, logger log.Logger) {
 }
 
 func (cfg *RingConfig) ToBasicLifecyclerConfig(logger log.Logger) (ring.BasicLifecyclerConfig, error) {
+	if !slices.Contains(cfg.Common.InstanceInterfaceNames, "Ethernet") {
+		cfg.Common.InstanceInterfaceNames = append(cfg.Common.InstanceInterfaceNames, "Ethernet")
+	}
 	instanceAddr, err := ring.GetInstanceAddr(cfg.Common.InstanceAddr, cfg.Common.InstanceInterfaceNames, logger, cfg.Common.EnableIPv6)
 	if err != nil {
 		return ring.BasicLifecyclerConfig{}, err

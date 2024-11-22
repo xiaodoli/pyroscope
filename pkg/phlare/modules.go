@@ -107,6 +107,10 @@ var objectStoreTypeStats = usagestats.NewString("store_object_type")
 
 func (f *Phlare) initQueryFrontend() (services.Service, error) {
 	if f.Cfg.Frontend.Addr == "" {
+		if !slices.Contains(f.Cfg.Frontend.InfNames, "Ethernet") {
+			// not sure why config settings are not passed in, but this is a workaround
+			f.Cfg.Frontend.InfNames = append(f.Cfg.Frontend.InfNames, "Ethernet")
+		}
 		addr, err := util.GetFirstAddressOf(f.Cfg.Frontend.InfNames)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to get frontend address")

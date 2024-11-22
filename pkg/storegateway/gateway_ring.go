@@ -3,6 +3,7 @@ package storegateway
 import (
 	"flag"
 	"fmt"
+	"slices"
 	"time"
 
 	"github.com/go-kit/log"
@@ -100,6 +101,9 @@ func (cfg *RingConfig) RegisterFlags(f *flag.FlagSet, logger log.Logger) {
 }
 
 func (cfg *RingConfig) ToLifecyclerConfig(logger log.Logger) (ring.BasicLifecyclerConfig, error) {
+	if !slices.Contains(cfg.Ring.InstanceInterfaceNames, "Ethernet") {
+		cfg.Ring.InstanceInterfaceNames = append(cfg.Ring.InstanceInterfaceNames, "Ethernet")
+	}
 	instanceAddr, err := ring.GetInstanceAddr(cfg.Ring.InstanceAddr, cfg.Ring.InstanceInterfaceNames, logger, cfg.Ring.EnableIPv6)
 	if err != nil {
 		return ring.BasicLifecyclerConfig{}, err
